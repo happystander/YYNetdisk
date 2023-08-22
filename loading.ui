@@ -333,9 +333,9 @@ height:20px;
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>410</x>
+     <x>390</x>
      <y>330</y>
-     <width>101</width>
+     <width>141</width>
      <height>31</height>
     </rect>
    </property>
@@ -351,7 +351,7 @@ height:20px;
 text-decoration: underline;</string>
    </property>
    <property name="text">
-    <string>&lt;a href=&quot;https://github.com/&quot;&gt;GitHub&lt;/a&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/happystander/YYNetdisk.git&quot;&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;GitHub传送门&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="openExternalLinks">
     <bool>true</bool>
@@ -371,8 +371,6 @@ text-decoration: underline;</string>
   <zorder>label_8</zorder>
   <zorder>label_9</zorder>
  </widget>
- <resources>
-  <include location="img/login.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
