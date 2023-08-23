@@ -16,8 +16,8 @@ class LoginThread(QThread):
         super(LoginThread, self).__init__()
         self.pwd, self.account, self.flagRadioBtn_stu, self.flagRadioBtn_adm =  pwd, account, flagRadioBtn_stu, flagRadioBtn_adm
 
-    def run(self) -> None:
-        # 定义线程来进行登录
+    def run(self):
+        # 定义线程来进行登录,具体处理逻辑将放到服务器
         flag = False
         if self.flagRadioBtn_stu:
             if self.pwd == "111111" and self.account == "student":
