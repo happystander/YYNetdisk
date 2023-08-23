@@ -1,38 +1,54 @@
+from itertools import count
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
-import  time
+import requests
+import time
 # 引入线程和自定义信号
 from PyQt5.QtCore import QThread,pyqtSignal
 import sys
 
 app = QApplication(sys.argv)
+mIP = "http://127.0.0.1:5000/"
+
 
 class LoginThread(QThread):
     # 创建接受信号
-    loginSignal = pyqtSignal(bool)
+    loginSignal = pyqtSignal(str)
 
     def __init__(self,pwd,account,flagRadioBtn_stu,flagRadioBtn_adm):
         super(LoginThread, self).__init__()
-        self.pwd, self.account, self.flagRadioBtn_stu, self.flagRadioBtn_adm =  pwd, account, flagRadioBtn_stu, flagRadioBtn_adm
+        self.pwd, self.account, self.flagRadioBtn_stu, \
+            self.flagRadioBtn_adm =  pwd, account, flagRadioBtn_stu, flagRadioBtn_adm
+        self.loginURL = mIP + 'login'
+        self.data = {
+            "account":self.account,
+            "password":self.pwd,
+            "identityFlag":self.flagRadioBtn_stu,
+            "cookie":"dasdacusahdcajksdfuasgd23197ehdasdyuaiscgasdtsuhdbfgutyauiwegryfcsdhfgyuaw"
+        }
+        self._limitTry = 5
+        self._countTry = 0
 
     def run(self):
-        # 定义线程来进行登录,具体处理逻辑将放到服务器
-        flag = False
-        if self.flagRadioBtn_stu:
-            if self.pwd == "111111" and self.account == "student":
-                print("login in")
-                flag = True
-            else:
-                print("login out")
+        #  需要使用线程管理
+        # TODO
 
-        elif self.flagRadioBtn_adm:
-            if self.pwd == "111111" and self.account == "admin":
-                print("login in")
-                flag = True
-            else:
-                print("login out")
-        self.loginSignal.emit(flag)
+        if self._countTry < self._limitTry:
+            try:
+                self._countTry += 1
+                response = requests.post(self.loginURL,data=self.data,timeout=10)
+                if response.status_code == 200:
+                    if DEBUG:
+                        print(response.text)
+                    flag = response.text
+                    self.loginSignal.emit(flag)
+            except Exception as e:
+                time.sleep(0.5)
+                self.run()
+        else:
+            # 结束线程
+            print("Connect error!")
 
 class LoadingUI(QWidget):
 
@@ -88,7 +104,7 @@ class LoadingUI(QWidget):
 
         def login_succ(self,flag):
             self.flag = flag
-            if flag:
+            if flag == "True":
                 msg_box = QMessageBox(QMessageBox.Information, 'sign!', '登录成功')
                 print("login successfully!")
             else:
@@ -103,8 +119,8 @@ class LoadingUI(QWidget):
         def show(self):
             self.loadingWin.show()
 
-
-
-loadWin = LoadingUI()
-loadWin.show()
-sys.exit(app.exec_())
+if __name__ == "__main__":
+    DEBUG= 1
+    loadWin = LoadingUI()
+    loadWin.show()
+    sys.exit(app.exec_())
